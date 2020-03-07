@@ -1,2 +1,4 @@
-node_modules
-makefile
+/node_modules/
+*.log
+dist
+coverage

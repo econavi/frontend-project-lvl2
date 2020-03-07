@@ -1,10 +1,7 @@
-#!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
-
-const commander = require('commander');
-const _ = require('lodash');
+import fs from 'fs';
+import process from 'process';
+import commander from 'commander';
+import _ from 'lodash';
 
 const program = new commander.Command();
 program.version('0.0.1');
@@ -16,21 +13,21 @@ const getDiff = (before, after) => {
     if (_.has(after, key)) {
       if (value === after[key]) {
         return {
-          ...acc, 
-          [key]: { 
-            status: 'nothing', 
+          ...acc,
+          [key]: {
+            status: 'nothing',
             value,
           },
         };
-      } else {
-        return {
-          ...acc, 
-          [key]: {
-            status: 'change', 
-            value: [value, after[key]]
-          }
-        }
       }
+
+      return {
+        ...acc,
+        [key]: {
+          status: 'change',
+          value: [value, after[key]],
+        },
+      };
     }
 
     return {
@@ -38,11 +35,11 @@ const getDiff = (before, after) => {
       [key]: {
         status: 'deleted',
         value,
-      }
-    }
+      },
+    };
   }, {});
 
-  const astAfter = Object.entries(after).reduce((acc, [key, value]) => {   
+  const astAfter = Object.entries(after).reduce((acc, [key, value]) => {
     if (!(_.has(astBefore, key))) {
       return {
         ...acc,
@@ -50,7 +47,7 @@ const getDiff = (before, after) => {
           status: 'added',
           value,
         },
-      }
+      };
     }
 
     return acc;
@@ -74,7 +71,7 @@ const getDiff = (before, after) => {
     return `${acc}\n+ ${key}: ${elem.value}`;
   }, '');
 
-  return result;  
+  return result;
 };
 
 program.arguments('<firstConfig> <secondConfig>');
@@ -84,7 +81,8 @@ program.action((firstConfig, secondConfig) => {
 
   const result = getDiff(before, after);
   console.log(result);
-  
 });
 
 program.parse(process.argv);
+
+export default getDiff;
