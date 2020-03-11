@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import genDiff from '../src';
+import genDiff from '../src/genDiff';
 
 test('genDiff', () => {
   const before = JSON.parse(fs.readFileSync(path
