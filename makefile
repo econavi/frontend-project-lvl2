@@ -1,3 +1,8 @@
+install: install-deps
+
+install-deps:
+	npm ci
+
 build:
 	rm -rf dist
 	npm run build
@@ -16,3 +21,5 @@ test:
 
 test-coverage:
 	npm test -- --coverage
+
+.PHONY: test
