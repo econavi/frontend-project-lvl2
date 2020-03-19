@@ -2,22 +2,30 @@ import path from 'path';
 import parsers from '../src/parsers.js';
 
 test('parsers', () => {
-  const dataJson = path.join(__dirname, '..', 'fixtures', 'before.json');
-  const dataYaml = path.join(__dirname, '..', 'fixtures', 'before.yml');
-  const dataIni = path.join(__dirname, '..', 'fixtures', 'before.ini');
+  const dataJson = path.join(__dirname, '..', '__fixtures__', 'before.json');
+  const dataYaml = path.join(__dirname, '..', '__fixtures__', 'before.yml');
+  const dataIni = path.join(__dirname, '..', '__fixtures__', 'before.ini');
 
   const expected = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
+    common: {
+      setting1: 'Value 1',
+      setting2: 200,
+      setting3: true,
+      setting6: { key: 'value' },
+    },
+    group1: { baz: 'bas', foo: 'bar', nest: { key: 'value' } },
+    group2: { abc: 12345 },
   };
 
   const expectedFromIni = {
-    host: 'hexlet.io',
-    timeout: '50',
-    proxy: '123.234.53.22',
-    follow: false,
+    common: {
+      setting1: 'Value 1',
+      setting2: '200',
+      setting3: true,
+      setting6: { key: 'value' },
+    },
+    group1: { baz: 'bas', foo: 'bar', nest: { key: 'value' } },
+    group2: { abc: '12345' },
   };
 
   expect(parsers(dataJson)).toEqual(expected);

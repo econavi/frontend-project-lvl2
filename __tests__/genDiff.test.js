@@ -4,18 +4,13 @@ import genDiff from '../src/genDiff';
 
 test('genDiff', () => {
   const before = JSON.parse(fs.readFileSync(path
-    .join(__dirname, '..', 'fixtures', 'before.json')));
+    .join(__dirname, '..', '__fixtures__', 'before.json')));
 
   const after = JSON.parse(fs.readFileSync(path
-    .join(__dirname, '..', 'fixtures', 'after.json')));
+    .join(__dirname, '..', '__fixtures__', 'after.json')));
 
-  const expected = `
-host: hexlet.io
-- timeout: 50
-+ timeout: 20
-- proxy: 123.234.53.22
-- follow: false
-+ verbose: true`;
+  const expected = fs.readFileSync(path
+    .join(__dirname, '..', '__fixtures__', 'result.txt'), 'utf-8');
 
   expect(genDiff(before, after)).toBe(expected);
 });
