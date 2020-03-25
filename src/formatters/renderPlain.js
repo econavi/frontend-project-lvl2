@@ -40,8 +40,8 @@ const getBuilderOfPart = (arg) => templates
   .find(({ status }) => (status === arg));
 
 const renderPlain = (ast) => {
-  const iter = (data, mainAcc, path) => {
-    return data.reduce((acc, [status, ...rest]) => {
+  const iter = (data, mainAcc, path) => data
+    .reduce((acc, [status, ...rest]) => {
       const [key, value] = rest;
       const { getPart } = getBuilderOfPart(status);
 
@@ -52,7 +52,6 @@ const renderPlain = (ast) => {
 
       return [...acc, getPart(rest, path)];
     }, mainAcc);
-  };
 
   const innerValue = iter(ast, [], '');
   const resultValue = _.flatten(innerValue).map((val) => `${val}\n`);
