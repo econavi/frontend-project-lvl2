@@ -1,10 +1,10 @@
-import path from 'path';
+import { getFixturePath } from '../src/utils';
 import parsers from '../src/parsers.js';
 
 test('parsers', () => {
-  const dataJson = path.join(__dirname, '..', '__fixtures__', 'before.json');
-  const dataYaml = path.join(__dirname, '..', '__fixtures__', 'before.yml');
-  const dataIni = path.join(__dirname, '..', '__fixtures__', 'before.ini');
+  const dataJson = getFixturePath('before.json');
+  const dataYaml = getFixturePath('before.yml');
+  const dataIni = getFixturePath('before.ini');
 
   const expected = {
     common: {

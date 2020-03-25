@@ -42,7 +42,7 @@ const templates = [
 const getBuilderOfPart = (arg) => templates
   .find(({ status }) => (status === arg));
 
-const render = (data, spaceLengthOption = 2) => {
+const renderDefault = (data, spaceLengthOption = 2) => {
   const buildParts = (partsData, _depth = 1) => {
     let depthLevelCounter = _depth;
 
@@ -75,4 +75,4 @@ const render = (data, spaceLengthOption = 2) => {
   return result;
 };
 
-export default render;
+export default renderDefault;

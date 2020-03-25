@@ -1,16 +1,12 @@
-import fs from 'fs';
-import path from 'path';
+import { readFile } from '../src/utils';
 import genDiff from '../src/genDiff';
 
 test('genDiff', () => {
-  const before = JSON.parse(fs.readFileSync(path
-    .join(__dirname, '..', '__fixtures__', 'before.json')));
+  const before = JSON.parse(readFile('before.json'));
 
-  const after = JSON.parse(fs.readFileSync(path
-    .join(__dirname, '..', '__fixtures__', 'after.json')));
+  const after = JSON.parse(readFile('after.json'));
 
-  const expected = fs.readFileSync(path
-    .join(__dirname, '..', '__fixtures__', 'result.txt'), 'utf-8');
+  const expected = readFile('result.txt');
 
   expect(genDiff(before, after)).toBe(expected);
 });

@@ -1,9 +1,9 @@
 import parse from './parse';
-import render from './render';
+import formatters from './formatters/index';
 
-const genDiff = (before, after) => {
+const genDiff = (before, after, format = '') => {
   const ast = parse(before, after);
-  const result = render(ast);
+  const result = formatters(ast, format);
 
   return result;
 };

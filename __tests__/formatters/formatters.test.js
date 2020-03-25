@@ -1,7 +1,9 @@
-import render from '../src/render';
+import formatters from '../../src/formatters/index';
 
-test('render', () => {
-  const data = [
+let data;
+
+beforeAll(() => {
+  data = [
     ['unchanged', 'group2', 'aaa'],
     ['unchanged', 'deep', [
       ['changed', 'deepgroup', 'val-4', 'val333'],
@@ -25,7 +27,9 @@ test('render', () => {
       objkey2: 'abcdefg',
     }],
   ];
+});
 
+test('render default', () => {
   const expected = [
     '{\n',
     '    group2: aaa\n',
@@ -48,5 +52,18 @@ test('render', () => {
     '}\n',
   ].join('').trim();
 
-  expect(render(data)).toBe(expected);
+  expect(formatters(data)).toBe(expected);
+});
+
+test('render plain', () => {
+  const plainExpected = [
+    "Property 'deep.deepgroup' was changed from 'val-4' to 'val333'\n",
+    "Property 'deeper.deepergroup' was changed from 11111111 to [complex value]\n",
+    "Property 'group3' was added with value: 100500\n",
+    "Property 'group4' was deleted\n",
+    "Property 'group5' was changed from 'val1' to 'val2'\n",
+    "Property 'group6' was added with value: [complex value]\n",
+  ].join('').trim();
+
+  expect(formatters(data, 'plain')).toBe(plainExpected);
 });
