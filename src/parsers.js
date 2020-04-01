@@ -1,10 +1,11 @@
 import path from 'path';
-import fs from 'fs';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
+import { readFile } from './utils';
+
 const parsers = (config) => {
-  const file = fs.readFileSync(config, 'utf-8');
+  const dataFile = readFile(config);
   const extname = path.extname(config);
 
   let parser;
@@ -20,7 +21,7 @@ const parsers = (config) => {
     parser = ini.parse;
   }
 
-  return parser(file);
+  return parser(dataFile);
 };
 
 export default parsers;
