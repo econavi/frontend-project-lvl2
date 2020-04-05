@@ -1,32 +1,41 @@
-import parsers from '../src/parsers';
+
+import path from 'path';
+import fs from 'fs';
+import yaml from 'js-yaml';
+import ini from 'ini';
+
 import genDiff from '../src/genDiff';
 
-import { readFile } from '../src/utils';
+const getFixturePath = (filename) => path
+  .join(__dirname, '..', '__fixtures__', filename);
 
-test('genDiff', () => {
-  const beforePlain = parsers('before-plain.json');
-  const afterPlain = parsers('after-plain.json');
+const readFile = (filename) => fs
+  .readFileSync(getFixturePath(filename), 'utf-8');
 
-  const beforeRecursion = parsers('before.json');
-  const afterRecursion = parsers('after.json');
+const beforePlain = JSON.parse(readFile('before-plain.json'));
+const afterPlain = JSON.parse(readFile('after-plain.json'));
 
-  const beforeYaml = parsers('before.yml');
-  const afterYaml = parsers('after.yml');
+const beforeRecursion = JSON.parse(readFile('before.json'));
+const afterRecursion = JSON.parse(readFile('after.json'));
 
-  const beforeIni = parsers('before.ini');
-  const afterIni = parsers('after.ini');
+const beforeYaml = yaml.safeLoad(readFile('before.yml'));
+const afterYaml = yaml.safeLoad(readFile('after.yml'));
 
-  const expectedRecursion = readFile('result-recursion.txt');
-  const expectedPlain = readFile('result-plain.txt');
-  const expectedPlainFormat = readFile('result-plain-format.txt');
-  const expectedJsonFormat = readFile('result-json-format.json');
+const beforeIni = ini.parse(readFile('before.ini'));
+const afterIni = ini.parse(readFile('after.ini'));
 
-  expect(genDiff(beforePlain, afterPlain)).toBe(expectedPlain);
-  expect(genDiff(beforeRecursion, afterRecursion)).toBe(expectedRecursion);
-  expect(genDiff(beforeYaml, afterYaml)).toBe(expectedRecursion);
-  expect(genDiff(beforeIni, afterIni)).toBe(expectedRecursion);
-  expect(genDiff(beforeRecursion, afterRecursion, 'plain'))
-    .toBe(expectedPlainFormat);
-  expect(genDiff(beforeRecursion, afterRecursion, 'json'))
-    .toBe(expectedJsonFormat);
+const expectedRecursion = readFile('result-recursion.txt');
+const expectedPlain = readFile('result-plain.txt');
+const expectedPlainFormat = readFile('result-plain-format.txt');
+const expectedJsonFormat = readFile('result-json-format.json');
+
+test.each([
+  [beforePlain, afterPlain, expectedPlain],
+  [beforeRecursion, afterRecursion, expectedRecursion],
+  [beforeYaml, afterYaml, expectedRecursion],
+  [beforeIni, afterIni, expectedRecursion],
+  [beforeRecursion, afterRecursion, expectedPlainFormat, 'plain'],
+  [beforeRecursion, afterRecursion, expectedJsonFormat, 'json'],
+])('genDiff(%#)', (a, b, expected, format = '') => {
+  expect(genDiff(a, b, format)).toBe(expected);
 });
