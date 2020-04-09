@@ -1,8 +1,6 @@
 
 import path from 'path';
 import fs from 'fs';
-import yaml from 'js-yaml';
-import ini from 'ini';
 
 import genDiff from '../src/genDiff';
 
@@ -12,17 +10,17 @@ const getFixturePath = (filename) => path
 const readFile = (filename) => fs
   .readFileSync(getFixturePath(filename), 'utf-8');
 
-const beforePlain = JSON.parse(readFile('before-plain.json'));
-const afterPlain = JSON.parse(readFile('after-plain.json'));
+const beforePlain = getFixturePath('before-plain.json');
+const afterPlain = getFixturePath('after-plain.json');
 
-const beforeRecursion = JSON.parse(readFile('before.json'));
-const afterRecursion = JSON.parse(readFile('after.json'));
+const beforeRecursion = getFixturePath('before.json');
+const afterRecursion = getFixturePath('after.json');
 
-const beforeYaml = yaml.safeLoad(readFile('before.yml'));
-const afterYaml = yaml.safeLoad(readFile('after.yml'));
+const beforeYaml = getFixturePath('before.yml');
+const afterYaml = getFixturePath('after.yml');
 
-const beforeIni = ini.parse(readFile('before.ini'));
-const afterIni = ini.parse(readFile('after.ini'));
+const beforeIni = getFixturePath('before.ini');
+const afterIni = getFixturePath('after.ini');
 
 const expectedRecursion = readFile('result-recursion.txt');
 const expectedPlain = readFile('result-plain.txt');

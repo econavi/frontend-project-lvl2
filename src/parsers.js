@@ -1,12 +1,12 @@
+import fs from 'fs';
+
 import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-import { readFile } from './utils';
-
-const parsers = (config) => {
-  const dataFile = readFile(config);
-  const extname = path.extname(config);
+const parsers = (filePath) => {
+  const dataFile = fs.readFileSync(filePath, 'utf-8');
+  const extname = path.extname(filePath);
 
   let parser;
   if (extname === '.json') {
