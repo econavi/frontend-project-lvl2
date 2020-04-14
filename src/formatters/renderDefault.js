@@ -16,13 +16,13 @@ const stringify = (val, space = '') => {
 const templates = [
   {
     status: 'unchanged',
-    getPart: ([key, value], space) => [
+    getPart: ({ key, value }, space) => [
       `${space}  ${key}: ${stringify(value, space)}`,
     ],
   },
   {
     status: 'changed',
-    getPart: ([key, value, newValue], space) => (
+    getPart: ({ key, value, newValue }, space) => (
       [
         `${space}- ${key}: ${stringify(value, space)}`,
         `${space}+ ${key}: ${stringify(newValue, space)}`,
@@ -31,11 +31,11 @@ const templates = [
   },
   {
     status: 'added',
-    getPart: ([key, value], space) => [`${space}+ ${key}: ${stringify(value, space)}`],
+    getPart: ({ key, value }, space) => [`${space}+ ${key}: ${stringify(value, space)}`],
   },
   {
     status: 'deleted',
-    getPart: ([key, value], space) => [`${space}- ${key}: ${stringify(value, space)}`],
+    getPart: ({ key, value }, space) => [`${space}- ${key}: ${stringify(value, space)}`],
   },
 ];
 
@@ -46,17 +46,17 @@ const renderDefault = (data, spaceLengthOption = 2) => {
   const buildParts = (partsData, _depth = 1) => {
     let depthLevelCounter = _depth;
 
-    return partsData.reduce((acc, [status, ...rest]) => {
+    return partsData.reduce((acc, partData) => {
       const spacesString = ' '.repeat(depthLevelCounter * spaceLengthOption);
 
+      const { status, key, value } = partData;
       const { getPart } = getBuilderOfPart(status);
-      const [key, value] = rest;
 
       if (value instanceof Array) {
         depthLevelCounter += spaceLengthOption;
         const newAcc = [
           ...acc,
-          `${getPart([key, ''], spacesString)}{`,
+          `${getPart({ key, value: '' }, spacesString)}{`,
           buildParts(value, depthLevelCounter),
           `${spacesString}  }`,
         ];
@@ -64,7 +64,7 @@ const renderDefault = (data, spaceLengthOption = 2) => {
         return newAcc;
       }
 
-      const build = [...acc, getPart(rest, spacesString)];
+      const build = [...acc, getPart(partData, spacesString)];
       return _.flatten(build);
     }, []);
   };

@@ -13,23 +13,28 @@ const buildTree = (data1, data2) => {
     if (checkIsObject(value1) && checkIsObject(value2)) {
       return [
         ...acc,
-        ['unchanged', key, buildTree(value1, value2)],
+        { status: 'unchanged', key, value: buildTree(value1, value2) },
       ];
     }
 
     if (!_.has(data2, key)) {
-      return [...acc, ['deleted', key, value1]];
+      return [...acc, { status: 'deleted', key, value: value1 }];
     }
 
     if (!_.has(data1, key)) {
-      return [...acc, ['added', key, value2]];
+      return [...acc, { status: 'added', key, value: value2 }];
     }
 
     if (value1 !== value2) {
-      return [...acc, ['changed', key, value1, value2]];
+      return [
+        ...acc,
+        {
+          status: 'changed', key, value: value1, newValue: value2,
+        },
+      ];
     }
 
-    return [...acc, ['unchanged', key, value1]];
+    return [...acc, { status: 'unchanged', key, value: value1 }];
   }, []);
 };
 
