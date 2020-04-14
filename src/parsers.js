@@ -8,20 +8,19 @@ const parsers = (filePath) => {
   const dataFile = fs.readFileSync(filePath, 'utf-8');
   const extname = path.extname(filePath);
 
-  let parser;
-  if (extname === '.json') {
-    parser = JSON.parse;
-  }
+  switch (extname) {
+    case '.json':
+      return JSON.parse(dataFile);
 
-  if (extname === '.yml') {
-    parser = yaml.safeLoad;
-  }
+    case '.yml':
+      return yaml.safeLoad(dataFile);
 
-  if (extname === '.ini') {
-    parser = ini.parse;
-  }
+    case '.ini':
+      return ini.parse(dataFile);
 
-  return parser(dataFile);
+    default:
+      throw new Error('Wrong file format');
+  }
 };
 
 export default parsers;
