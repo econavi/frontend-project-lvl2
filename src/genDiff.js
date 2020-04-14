@@ -1,6 +1,6 @@
 import path from 'path';
 
-import parse from './parse';
+import buildTree from './buildTree';
 import formatters from './formatters';
 import parsers from './parsers.js';
 
@@ -17,7 +17,7 @@ const genDiff = (firstConfig, secondConfig, format = '') => {
   const before = parsers(path1);
   const after = parsers(path2);
 
-  const ast = parse(before, after);
+  const ast = buildTree(before, after);
   const result = formatters(ast, format);
 
   return result;

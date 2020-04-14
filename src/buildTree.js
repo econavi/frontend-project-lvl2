@@ -2,8 +2,8 @@ import _ from 'lodash';
 
 const checkIsObject = (value) => value instanceof Object;
 
-const parse = (data1, data2) => {
-  const keys = [...Object.keys(data1), ...Object.keys(data2)];
+const buildTree = (data1, data2) => {
+  const keys = _.union(_.keys(data1), _.keys(data2));
   const sortedKeys = _.sortedUniq(keys.sort());
 
   return sortedKeys.reduce((acc, key) => {
@@ -13,7 +13,7 @@ const parse = (data1, data2) => {
     if (checkIsObject(value1) && checkIsObject(value2)) {
       return [
         ...acc,
-        ['unchanged', key, parse(value1, value2)],
+        ['unchanged', key, buildTree(value1, value2)],
       ];
     }
 
@@ -33,4 +33,4 @@ const parse = (data1, data2) => {
   }, []);
 };
 
-export default parse;
+export default buildTree;
