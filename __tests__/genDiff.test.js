@@ -20,6 +20,6 @@ test.each([
   const before = getFixturePath(`before.${extFile}`);
   const after = getFixturePath(`after.${extFile}`);
   const expected = readFile(expectedFileName);
-  
+
   expect(genDiff(before, after, outputFormat)).toBe(expected);
 });
