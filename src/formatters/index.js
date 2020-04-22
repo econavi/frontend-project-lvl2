@@ -1,8 +1,8 @@
-import renderDefault from './renderDefault';
+import renderStylish from './renderStylish';
 import renderPlain from './renderPlain';
 import renderJson from './renderJson';
 
-const formatters = (data, format = '') => {
+const formatters = (data, format) => {
   if (format === 'plain') {
     return renderPlain(data, 'plain');
   }
@@ -11,7 +11,7 @@ const formatters = (data, format = '') => {
     return renderJson(data, 'json');
   }
 
-  return renderDefault(data);
+  return renderStylish(data);
 };
 
 export default formatters;

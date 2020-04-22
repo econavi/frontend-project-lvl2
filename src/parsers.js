@@ -1,25 +1,19 @@
-import fs from 'fs';
-
-import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const parsers = (filePath) => {
-  const dataFile = fs.readFileSync(filePath, 'utf-8');
-  const extname = path.extname(filePath);
-
-  switch (extname) {
+const parsers = (fileData, extName) => {
+  switch (extName) {
     case '.json':
-      return JSON.parse(dataFile);
+      return JSON.parse(fileData);
 
     case '.yml':
-      return yaml.safeLoad(dataFile);
+      return yaml.safeLoad(fileData);
 
     case '.ini':
-      return ini.parse(dataFile);
+      return ini.parse(fileData);
 
     default:
-      throw new Error('Wrong file format');
+      throw new Error(`Wrong file extension — ${extName}`);
   }
 };
 

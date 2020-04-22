@@ -1,21 +1,30 @@
+import fs from 'fs';
 import path from 'path';
 
 import buildTree from './buildTree';
 import formatters from './formatters';
 import parsers from './parsers.js';
 
-const genDiff = (firstConfig, secondConfig, format = '') => {
-  const path1 = path.resolve(
+const genDiff = (firstConfig, secondConfig, format) => {
+  const filePath1 = path.resolve(
     process.cwd(),
     firstConfig,
   );
-  const path2 = path.resolve(
+
+  const filePath2 = path.resolve(
     process.cwd(),
     secondConfig,
   );
 
-  const before = parsers(path1);
-  const after = parsers(path2);
+  const before = parsers(
+    fs.readFileSync(filePath1, 'utf-8'),
+    path.extname(filePath1),
+  );
+
+  const after = parsers(
+    fs.readFileSync(filePath2, 'utf-8'),
+    path.extname(filePath2),
+  );
 
   const ast = buildTree(before, after);
   const result = formatters(ast, format);
