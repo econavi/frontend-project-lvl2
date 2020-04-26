@@ -1,11 +1,15 @@
 import _ from 'lodash';
 
-const stringify = (val, space) => (
-  !(val instanceof Object) ? val : Object.entries(val)
-    .reduce((acc, [key, value]) => (
-      [...acc, `{\n${space}      ${key}: ${value}\n${space}  }`]
-    ), [])
-);
+const stringify = (val, space) => {
+  const valueIsObject = val instanceof Object;
+  if (!valueIsObject) {
+    return val;
+  }
+
+  return Object.entries(val).reduce((acc, [key, value]) => (
+    [...acc, `{\n${space}      ${key}: ${value}\n${space}  }`]
+  ), []);
+};
 
 const getPart = function getPart(part, space) {
   const {
@@ -22,8 +26,10 @@ const getPart = function getPart(part, space) {
       return [`${space}+ ${key}: ${stringify(value, space)}`];
     case 'deleted':
       return [`${space}- ${key}: ${stringify(value, space)}`];
-    default:
+    case 'unchanged':
       return [`  ${space}${key}: ${stringify(value, space)}`];
+    default:
+      return [];
   }
 };
 
@@ -33,11 +39,11 @@ const renderStylish = (data) => {
     const space = ' '.repeat(spaceLength);
 
     return tree.reduce((acc, node) => {
-      if (node.value instanceof Array) {
+      if (node.children.length) {
         return [
           ...acc,
           `  ${space}${node.key}: {`,
-          buildParts(node.value, depth + 2),
+          buildParts(node.children, depth + 2),
           `  ${space}}`,
         ];
       }
@@ -48,10 +54,7 @@ const renderStylish = (data) => {
 
   const parts = _.flattenDeep(buildParts(data, 1));
 
-  return ['{', ...parts, '}']
-    .map((el) => `${el}\n`)
-    .join('')
-    .trim();
+  return ['{', ...parts, '}'].join('\n').trim();
 };
 
 export default renderStylish;

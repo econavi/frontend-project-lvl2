@@ -8,15 +8,15 @@ const stringify = (val) => {
 };
 
 const renderPlain = (ast) => {
-  const iter = (data, initialAcc, path) => data
-    .reduce((acc, partData) => {
+  const iter = (data, acc, path) => data
+    .map((partData) => {
       const {
-        status, key, value, oldValue, newValue,
+        status, key, value, oldValue, newValue, children,
       } = partData;
 
-      if (value instanceof Array) {
+      if (children.length) {
         const newPath = `${key}.`;
-        return iter(value, acc, newPath);
+        return iter(children, acc, newPath);
       }
 
       if (status === 'changed') {
@@ -35,12 +35,12 @@ const renderPlain = (ast) => {
       }
 
       return acc;
-    }, initialAcc);
+    });
 
   const innerValue = iter(ast, [], '');
-  const resultValue = _.flatten(innerValue).map((val) => `${val}\n`);
+  const resultValue = _.flattenDeep(innerValue).filter((v) => v);
 
-  return resultValue.join('').trim();
+  return resultValue.join('\n').trim();
 };
 
 export default renderPlain;

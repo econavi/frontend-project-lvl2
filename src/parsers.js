@@ -1,19 +1,19 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const parsers = (fileData, extName) => {
-  switch (extName) {
-    case '.json':
-      return JSON.parse(fileData);
+const parsers = (data, type) => {
+  switch (type) {
+    case 'json':
+      return JSON.parse(data);
 
-    case '.yml':
-      return yaml.safeLoad(fileData);
+    case 'yml':
+      return yaml.safeLoad(data);
 
-    case '.ini':
-      return ini.parse(fileData);
+    case 'ini':
+      return ini.parse(data);
 
     default:
-      throw new Error(`Wrong file extension — ${extName}`);
+      throw new Error(`Wrong file type — ${type}`);
   }
 };
 
