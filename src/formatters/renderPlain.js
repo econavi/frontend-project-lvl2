@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const stringify = (val) => {
   const isString = typeof val === 'string';
   const isObject = val instanceof Object;
@@ -8,39 +6,38 @@ const stringify = (val) => {
 };
 
 const renderPlain = (ast) => {
-  const iter = (data, acc, path) => data
-    .map((partData) => {
+  const iter = (data, path) => data
+    .flatMap((partData) => {
       const {
         status, key, value, oldValue, newValue, children,
       } = partData;
 
-      if (children.length) {
-        const newPath = `${key}.`;
-        return iter(children, acc, newPath);
-      }
+      switch (status) {
+        case 'added':
+          return [
+            `Property '${path}${key}' was added with value: ${stringify(value)}`,
+          ];
 
-      if (status === 'changed') {
-        return [
-          ...acc,
-          (`Property '${path}${key}' was changed from ${stringify(oldValue)} to ${stringify(newValue)}`),
-        ];
-      }
+        case 'deleted':
+          return [
+            `Property '${path}${key}' was deleted`,
+          ];
 
-      if (status === 'added') {
-        return [...acc, `Property '${path}${key}' was added with value: ${stringify(value)}`];
-      }
+        case 'changed':
+          return [
+            `Property '${path}${key}' was changed from ${stringify(oldValue)} to ${stringify(newValue)}`,
+          ];
 
-      if (status === 'deleted') {
-        return [...acc, `Property '${path}${key}' was deleted`];
-      }
+        case 'unchanged':
+          return children ? iter(children, `${key}.`) : [];
 
-      return acc;
+        default:
+          throw new Error(`Wrong type node — ${status}`);
+      }
     });
 
-  const innerValue = iter(ast, [], '');
-  const resultValue = _.flattenDeep(innerValue).filter((v) => v);
-
-  return resultValue.join('\n').trim();
+  const innerValue = iter(ast, '');
+  return innerValue.join('\n').trim();
 };
 
 export default renderPlain;

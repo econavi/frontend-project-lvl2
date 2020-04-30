@@ -13,7 +13,7 @@ const parsers = (data, type) => {
       return ini.parse(data);
 
     default:
-      throw new Error(`Wrong file type — ${type}`);
+      throw new Error(`Wrong data type — ${type}`);
   }
 };
 

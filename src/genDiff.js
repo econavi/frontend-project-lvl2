@@ -2,18 +2,18 @@ import fs from 'fs';
 import path from 'path';
 
 import buildTree from './buildTree';
-import makeDiff from './formatters';
+import formatDiff from './formatters';
 import getDataByFile from './parsers.js';
 
-const genDiff = (firstConfig, secondConfig, format) => {
+const genDiff = (firstPath, secondPath, format) => {
   const filePath1 = path.resolve(
     process.cwd(),
-    firstConfig,
+    firstPath,
   );
 
   const filePath2 = path.resolve(
     process.cwd(),
-    secondConfig,
+    secondPath,
   );
 
   const before = getDataByFile(
@@ -27,7 +27,7 @@ const genDiff = (firstConfig, secondConfig, format) => {
   );
 
   const ast = buildTree(before, after);
-  const result = makeDiff(ast, format);
+  const result = formatDiff(ast, format);
 
   return result;
 };

@@ -9,11 +9,11 @@ const buildTree = (data1, data2) => {
     const value1 = data1[key];
     const value2 = data2[key];
 
-    if ((value1 && isObject(value1)) && (value2 && isObject(value2))) {
+    if (value1 === value2) {
       return {
         status: 'unchanged',
         key,
-        children: buildTree(value1, value2),
+        value: value1,
       };
     }
 
@@ -22,7 +22,6 @@ const buildTree = (data1, data2) => {
         status: 'deleted',
         key,
         value: value1,
-        children: [],
       };
     }
 
@@ -31,25 +30,22 @@ const buildTree = (data1, data2) => {
         status: 'added',
         key,
         value: value2,
-        children: [],
       };
     }
 
-    if (value1 !== value2) {
+    if (isObject(value1) && isObject(value2)) {
       return {
-        status: 'changed',
+        status: 'unchanged',
         key,
-        oldValue: value1,
-        newValue: value2,
-        children: [],
+        children: buildTree(value1, value2),
       };
     }
 
     return {
-      status: 'unchanged',
+      status: 'changed',
       key,
-      value: value1,
-      children: [],
+      oldValue: value1,
+      newValue: value2,
     };
   });
 
