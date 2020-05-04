@@ -14,22 +14,19 @@ const renderPlain = (ast) => {
 
       switch (status) {
         case 'added':
-          return [
-            `Property '${path}${key}' was added with value: ${stringify(value)}`,
-          ];
+          return `Property '${path}${key}' was added with value: ${stringify(value)}`;
 
         case 'deleted':
-          return [
-            `Property '${path}${key}' was deleted`,
-          ];
+          return `Property '${path}${key}' was deleted`;
 
         case 'changed':
-          return [
-            `Property '${path}${key}' was changed from ${stringify(oldValue)} to ${stringify(newValue)}`,
-          ];
+          return `Property '${path}${key}' was changed from ${stringify(oldValue)} to ${stringify(newValue)}`;
 
         case 'unchanged':
-          return children ? iter(children, `${key}.`) : [];
+          return [];
+
+        case 'tree':
+          return iter(children, `${key}.`);
 
         default:
           throw new Error(`Wrong type node — ${status}`);
@@ -37,7 +34,7 @@ const renderPlain = (ast) => {
     });
 
   const innerValue = iter(ast, '');
-  return innerValue.join('\n').trim();
+  return innerValue.join('\n');
 };
 
 export default renderPlain;

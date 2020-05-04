@@ -17,7 +17,7 @@ const renderStylish = (data) => {
 
     return tree.map((node) => {
       const {
-        status, key, value, oldValue, newValue, children,
+        status, key, value, oldValue, newValue,
       } = node;
 
       switch (status) {
@@ -34,13 +34,14 @@ const renderStylish = (data) => {
           return `${space}- ${key}: ${stringify(value, space)}`;
 
         case 'unchanged':
-          return children
-            ? [
-              `  ${space}${node.key}: {`,
-              buildParts(node.children, depth + 2),
-              `  ${space}}`,
-            ]
-            : `  ${space}${key}: ${stringify(value, space)}`;
+          return `  ${space}${key}: ${stringify(value, space)}`;
+
+        case 'tree':
+          return [
+            `  ${space}${node.key}: {`,
+            buildParts(node.children, depth + 2),
+            `  ${space}}`,
+          ];
 
         default:
           throw new Error(`Wrong type node — ${status}`);
@@ -49,7 +50,7 @@ const renderStylish = (data) => {
   };
 
   const parts = _.flattenDeep(buildParts(data, 1));
-  return ['{', ...parts, '}'].join('\n').trim();
+  return ['{', ...parts, '}'].join('\n');
 };
 
 export default renderStylish;
