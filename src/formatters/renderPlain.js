@@ -1,8 +1,8 @@
+import _ from 'lodash';
+
 const stringify = (val) => {
-  const isString = typeof val === 'string';
-  const isObject = val instanceof Object;
-  if (isObject) return '[complex value]';
-  return isString ? `'${val}'` : val;
+  if (_.isObject(val)) return '[complex value]';
+  return _.isString(val) ? `'${val}'` : val;
 };
 
 const renderPlain = (ast) => {
